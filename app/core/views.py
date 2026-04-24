@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import JsonResponse
 
+from core.serializers import ProfileDetailSerializer
 
 User = get_user_model()
 
@@ -42,9 +43,7 @@ def logout_view(request):
 
 def check_auth(request):
     if request.user.is_authenticated:
-        return JsonResponse({
-            "id": request.user.id,
-            "email": request.user.email,
-        })
+        
+        return JsonResponse(ProfileDetailSerializer(request.user.profile).data)
 
     return JsonResponse({"detail": "Unauthorized"}, status=401)
